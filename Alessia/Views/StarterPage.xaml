@@ -1,0 +1,110 @@
+﻿<base:ViewBase
+    x:Class="Alessia.Views.StarterPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:base="using:OneUI.Mvvm"
+    xmlns:local="using:Alessia.Views"
+    xmlns:models="using:Alessia.Models"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" Loaded="OnLoaded">
+    <Page.Resources>
+        <Storyboard x:Key="HideWelcomeMessageAnimation">
+            <DoubleAnimation Storyboard.TargetName="WelcomeTextBlock" Storyboard.TargetProperty="Opacity" From="1" To="0" BeginTime="0:0:4" Duration="0:0:1"/>
+            <DoubleAnimation Storyboard.TargetName="TutorialGrid" Storyboard.TargetProperty="Opacity" From="0" To="1" BeginTime="0:0:4.5" Duration="0:0:1"/>
+            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="WelcomeTextBlock" Storyboard.TargetProperty="Visibility">
+                <DiscreteObjectKeyFrame KeyTime="0:0:5" Value="Collapsed"/>
+            </ObjectAnimationUsingKeyFrames>
+            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="TutorialGrid" Storyboard.TargetProperty="Visibility">
+                <DiscreteObjectKeyFrame KeyTime="0:0:4.55" Value="Visible"/>
+            </ObjectAnimationUsingKeyFrames>
+        </Storyboard>
+        <Storyboard x:Key="HideTutorialAnimation">
+            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="TutorialGrid" Storyboard.TargetProperty="Visibility">
+                <DiscreteObjectKeyFrame KeyTime="0" Value="Collapsed"/>
+            </ObjectAnimationUsingKeyFrames>
+            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="SetUpStackPanel" Storyboard.TargetProperty="Visibility">
+                <DiscreteObjectKeyFrame KeyTime="0" Value="Visible"/>
+            </ObjectAnimationUsingKeyFrames>
+        </Storyboard>
+        <Storyboard x:Key="CreatingLibraryAnimation">
+            <DoubleAnimation Storyboard.TargetName="SetUpStackPanel" Storyboard.TargetProperty="Opacity" From="1" To="0" BeginTime="0:0:0" Duration="0:0:1"/>
+            <DoubleAnimation Storyboard.TargetName="workingStackPanel" Storyboard.TargetProperty="Opacity" From="0" To="1" BeginTime="0:0:0.5" Duration="0:0:1"/>
+            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="SetUpStackPanel" Storyboard.TargetProperty="Visibility">
+                <DiscreteObjectKeyFrame KeyTime="0:0:1" Value="Collapsed"/>
+            </ObjectAnimationUsingKeyFrames>
+            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="workingStackPanel" Storyboard.TargetProperty="Visibility">
+                <DiscreteObjectKeyFrame KeyTime="0:0:0.55" Value="Visible"/>
+            </ObjectAnimationUsingKeyFrames>
+        </Storyboard>
+    </Page.Resources>
+
+    <Grid >
+        <TextBlock x:Name="WelcomeTextBlock" Style="{StaticResource HeaderTextBlockStyle}" FontWeight="SemiBold" Margin="0, 32"
+                   HorizontalAlignment="Center" VerticalAlignment="Center" TextAlignment="Center">
+            Welcome to Alessia
+        </TextBlock>
+        <Grid x:Name="TutorialGrid" Visibility="Collapsed">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="40"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="100"/>
+            </Grid.RowDefinitions>
+            
+            <Button Grid.Row="2" x:Name="IGotItBtn" HorizontalAlignment="Right" Margin="32" Visibility="Collapsed" Click="IGotItButton_Click">
+                I got it
+            </Button>
+            <FlipView Grid.Row="1" Background="Transparent" SelectionChanged="FlipView_SelectionChanged">
+                <FlipView.ItemTemplate >
+                    <DataTemplate >
+                        <Grid >
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <TextBlock Grid.Row="0" Style="{StaticResource SubtitleTextBlockStyle}" Text="{Binding Message}" MaxWidth="600"
+                                       HorizontalAlignment="Center" TextAlignment="Center"/>
+                            <Image Grid.Row="1" Source="{Binding Image}" MaxWidth="360" MaxHeight="640" Margin="15" Stretch="Uniform"/>
+                        </Grid>
+                    </DataTemplate>
+                </FlipView.ItemTemplate>
+                <models:Tip Image="/Assets/Images/Splash Screen/SplashScreen.scale-400.png">
+                    We are going to introduce you to the basic functions of the application.
+                </models:Tip>
+                <models:Tip Image="/Assets/Images/Tutorial/T-DeleteItem.png">
+                    Remove items from your library.
+                </models:Tip>
+                <models:Tip Image="/Assets/Images/Tutorial/T-AddFileOrFolder.png">
+                    Add files or entire folders to your library.
+                </models:Tip>
+                <models:Tip Image="/Assets/Images/Tutorial/T-Visualizer.png">
+                    Now, you can enjoy your music with our new visualizer.
+                </models:Tip>
+            </FlipView>
+            
+        </Grid>
+        <StackPanel x:Name="SetUpStackPanel" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="15, 0" Visibility="Collapsed">
+            <TextBlock Style="{StaticResource HeaderTextBlockStyle}" HorizontalAlignment="Center" TextAlignment="Center"
+                       MaxWidth="600" FontWeight="SemiBold" Margin="0, 0, 0, 20">
+                Just one more thing...
+            </TextBlock>
+            <TextBlock Style="{StaticResource SubheaderTextBlockStyle}" HorizontalAlignment="Center" TextAlignment="Center" TextWrapping="Wrap" MaxWidth="600">
+                Do you want us to create your library from the Windows music library?
+            </TextBlock>
+            <Button Style="{StaticResource AccentButtonStyle}" HorizontalAlignment="Center" Margin="0, 30, 0, 0" Click="CreateLibraryButton_Click">
+                Yes, let's go!
+            </Button>
+            <Button HorizontalAlignment="Center" Margin="0, 15, 0, 0" Click="DoNotCreateLibraryButton_Click">
+                No, I'll do it myself
+            </Button>
+        </StackPanel>
+        <StackPanel x:Name="workingStackPanel" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="15, 0" Visibility="Collapsed">
+            <TextBlock x:Name="progressTextBlock" Style="{StaticResource HeaderTextBlockStyle}" FontWeight="SemiBold" Margin="0, 32"
+                   HorizontalAlignment="Center" VerticalAlignment="Center" TextAlignment="Center">
+                Creating your music library...
+            </TextBlock>
+            <ProgressBar x:Name="progressBar" IsIndeterminate="True"/>
+        </StackPanel>
+    </Grid>
+</base:ViewBase>

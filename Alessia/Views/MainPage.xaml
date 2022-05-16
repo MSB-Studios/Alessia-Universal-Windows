@@ -1,0 +1,72 @@
+﻿<base:ViewBase
+    x:Class="Alessia.Views.MainPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:onexc="using:OneUI.Xaml.Controls"
+    xmlns:services="using:Alessia.Services"
+    xmlns:base="using:OneUI.Mvvm"
+    xmlns:local="using:Alessia.Views"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:xv="using:Alessia.Models"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    <base:ViewBase.Resources>
+        <Style x:Key="SubtitleTextBlockStyle" TargetType="TextBlock" BasedOn="{StaticResource SubtitleTextBlockStyle}">
+            <Setter Property="FontWeight" Value="SemiBold"/>
+        </Style>
+    </base:ViewBase.Resources>
+
+    <onexc:NavigationView Loaded="NavigationView_Loaded" SelectedItem="{x:Bind ViewModel.SelectedItem, Mode=TwoWay}"
+                          SelectionChanged="NavigationView_SelectionChanged">
+        <onexc:NavigationView.MenuItems>
+            <onexc:NavigationViewItem Content="Songs" Tag="songs">
+                <onexc:NavigationViewItem.Icon>
+                    <PathIcon Data="{StaticResource MusicNote}"/>
+                </onexc:NavigationViewItem.Icon>
+            </onexc:NavigationViewItem>
+            <onexc:NavigationViewItem Content="Artists" IsEnabled="False">
+                <onexc:NavigationViewItem.Icon>
+                    <PathIcon Data="{StaticResource Microphone}"/>
+                </onexc:NavigationViewItem.Icon>
+            </onexc:NavigationViewItem>
+            <onexc:NavigationViewItem Content="Albums" IsEnabled="False">
+                <onexc:NavigationViewItem.Icon>
+                    <PathIcon Data="{StaticResource MusicDisc}"/>
+                </onexc:NavigationViewItem.Icon>
+            </onexc:NavigationViewItem>
+            <onexc:NavigationViewItem Content="Playlists" IsEnabled="False">
+                <onexc:NavigationViewItem.Icon>
+                    <PathIcon Data="{StaticResource Playlist}"/>
+                </onexc:NavigationViewItem.Icon>
+            </onexc:NavigationViewItem>
+        </onexc:NavigationView.MenuItems>
+        <onexc:NavigationView.FooterItems>
+            <onexc:NavigationViewItem Content="Settings" Tag="settings">
+                <onexc:NavigationViewItem.Icon>
+                    <PathIcon Data="{StaticResource Setting}"/>
+                </onexc:NavigationViewItem.Icon>
+            </onexc:NavigationViewItem>
+        </onexc:NavigationView.FooterItems>
+        <onexc:NavigationView.PaneHeader>
+            <StackPanel Orientation="Horizontal" Margin="5,0">
+                <Viewbox Width="22" Height="22" Stretch="Uniform">
+                    <PathIcon Data="{StaticResource AppLogo}" Foreground="{StaticResource ApplicationGradientBrush}"/>
+                </Viewbox>
+                <TextBlock Style="{StaticResource SubtitleTextBlockStyle}" Margin="10, 0">Alessia</TextBlock>
+            </StackPanel>
+        </onexc:NavigationView.PaneHeader>
+        <onexc:NavigationView.Header>
+            <TextBlock Style="{StaticResource TitleTextBlockStyle}" FontWeight="Bold" Text="{x:Bind ViewModel.SelectedValue, Mode=OneWay}"/>
+        </onexc:NavigationView.Header>
+        <Grid >
+            <ContentPresenter Content="{x:Bind ViewModel.Frame}"/>
+            <onexc:MediaPlayerElement Source="{x:Bind services:PlaybackService.Current.Source, Mode=OneWay}"
+                                      FullScreenRequested="MediaPlayerElement_FullScreenRequested"
+                                      MediaOpened="MediaPlayerElement_MediaOpened"
+                                      MediaEnded="MediaPlayerElement_MediaEnded"
+                                      MediaFailed="MediaPlayerElement_MediaFailed"
+                                      SourceChanged="MediaPlayerElement_SourceChanged"/>
+        </Grid>
+    </onexc:NavigationView>
+</base:ViewBase>
